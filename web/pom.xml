@@ -12,7 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-   
+   <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -165,29 +165,37 @@
 
   <build>
     <finalName>web</finalName>
+    
+<pluginManagement>
+  <plugins>
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+       <lifecycleMappingMetadata>
+         <pluginExecutions>
+           <pluginExecution>
+             <pluginExecutionFilter>
+        <groupId>com.github.klieber</groupId>
+        <artifactId>phantomjs-maven-plugin</artifactId>       
+               <versionRange>[0.1,)</versionRange>
+               <goals>
+               <goal>install</goal>
+                 <goal>exec</goal>
+               </goals>
+             </pluginExecutionFilter>
+             <action>
+               <ignore/>
+             </action>
+           </pluginExecution>
+         </pluginExecutions>
+       </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+  </plugins>
+</pluginManagement>
     <plugins>
-
-      <!-- Facilitates downloading source and javadoc in Eclipse -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.8</version>
-        <configuration>
-          <wtpversion>2.0</wtpversion>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
-
-      <!-- Plugin to run and test through maven -->
-      <plugin>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.25</version>
-        <configuration>
-          <scanIntervalSeconds>3</scanIntervalSeconds>
-        </configuration>
-      </plugin>
 
       <!-- Ensures we are compiling at 1.6 level -->
       <plugin>
@@ -199,14 +207,38 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
-
-      <!-- Tomcat plugin for embedded tomcat -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>tomcat-maven-plugin</artifactId>
-        <version>1.1</version>
+      
+            <plugin>
+        <groupId>com.github.klieber</groupId>
+        <artifactId>phantomjs-maven-plugin</artifactId>
+        <version>${phantomjs-maven-plugin.version}</version>
+        <executions>
+          <execution>
+          <phase>process-test-resources</phase>
+            <goals>
+              <goal>install</goal>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <path>/${project.build.finalName}</path>
+          <version>1.9.7</version>
+           <checkSystemPath>true</checkSystemPath>
+          <script>src/main/webapp/resources/test/run-qunit.js</script>
+          <arguments>
+            <argument>src/main/webapp/resources/test/test.html</argument>
+            <argument>${project.build.directory}/surefire-reports/TEST-test.xml</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <systemPropertyVariables>
+            <phantomjs.binary>${phantomjs.binary}</phantomjs.binary>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
 

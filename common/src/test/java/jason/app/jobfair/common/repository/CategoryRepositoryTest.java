@@ -1,19 +1,17 @@
 package jason.app.jobfair.common.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import jason.app.jobfair.common.BaseTestCase;
 import jason.app.jobfair.common.entity.CategoryImpl;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import java.io.FileInputStream;
+import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations="classpath:META-INF/application-context.xml")
-@ContextConfiguration(locations="classpath:META-INF/test-context.xml")
-public class CategoryRepositoryTest {
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class CategoryRepositoryTest extends BaseTestCase{
 
 	@Autowired
 	CategoryRepository repository;
@@ -30,5 +28,22 @@ public class CategoryRepositoryTest {
 		assertEquals(categoryName, dbpost.getName());
 		
 	}
+	
+	@Test
+	public void testFindAll() {
+	    List<CategoryImpl> result= repository.findAll();
+	    assertNotNull(result);
+	    assertEquals(1, result.size());
+	}
+
+    @Override
+    protected IDataSet getDataSet() throws Exception {
+        // TODO Auto-generated method stub
+        final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+        builder.setColumnSensing(true);
+        return builder.build(this.getClass().getClassLoader()
+                .getResourceAsStream("dataset/category/categories.xml"));
+
+    }
 
 }

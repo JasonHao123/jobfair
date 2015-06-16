@@ -1,0 +1,7 @@
+<dataset>
+    <PERSON id="10" 
+                firstName="row 0 col 1"
+                lastName="row 0 col 2"/> 
+
+    <CATEGORY id="111" name="hello" type="2"/>
+</dataset>
