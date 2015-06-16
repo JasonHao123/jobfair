@@ -1,8 +1,10 @@
 package jason.app.jobfair.common.service.impl;
 
+import jason.app.jobfair.common.constant.CategoryType;
 import jason.app.jobfair.common.model.Category;
 import jason.app.jobfair.common.repository.CategoryRepository;
 import jason.app.jobfair.common.service.ICategoryService;
+import jason.app.jobfair.common.translator.CategoryTranslator;
 
 import java.util.List;
 
@@ -15,8 +17,8 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryRepository categoryRepo;
 
     public List<Category> listJobTypes() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return CategoryTranslator.toDTO(categoryRepo.findByType(CategoryType.JOB_TYPE));
     }
 
     public List<Category> listEducationLevels() {
