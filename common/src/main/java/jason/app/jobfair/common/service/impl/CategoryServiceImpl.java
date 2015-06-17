@@ -23,12 +23,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     public List<Category> listEducationLevels() {
         // TODO Auto-generated method stub
-        return null;
+    	return CategoryTranslator.toDTO(categoryRepo.findByType(CategoryType.EDUCATION_LEVEL));
     }
 
     public List<Category> findFeatureByPattern(String pattern) {
         // TODO Auto-generated method stub
-        return null;
+    	return CategoryTranslator.toDTO(categoryRepo.findByTypeAndNameLike(CategoryType.FEATURE,pattern+"%"));
     }
 
 

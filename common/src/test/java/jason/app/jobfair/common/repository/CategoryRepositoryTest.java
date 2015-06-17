@@ -34,7 +34,7 @@ public class CategoryRepositoryTest extends BaseTestCase {
     public void testFindAll() {
         List<CategoryImpl> result = repository.findAll();
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(7, result.size());
     }
 
     @Test
@@ -47,13 +47,6 @@ public class CategoryRepositoryTest extends BaseTestCase {
     @Test
     public void testFindByTypeAndNameLikeNotFound() {
         List<CategoryImpl> result = repository.findByTypeAndNameLike(CategoryType.FEATURE, "%jason%");
-        assertNotNull(result);
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void testFindByTypeAndNameLikeNotFound2() {
-        List<CategoryImpl> result = repository.findByTypeAndNameLike(CategoryType.EDUCATION_LEVEL, "%hell%");
         assertNotNull(result);
         assertEquals(0, result.size());
     }

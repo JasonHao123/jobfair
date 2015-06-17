@@ -2,6 +2,12 @@
     <PERSON id="10" 
                 firstName="row 0 col 1"
                 lastName="row 0 col 2"/> 
-
-    <CATEGORY id="111" name="hello" type="2"/>
+	<CATEGORY id="111" name="hello" type="0"/>
+    <CATEGORY id="112" name="hello" type="1"/>
+    <CATEGORY id="113" name="hello" type="2"/>
+    <CATEGORY id="114" name="hello" type="3"/>
+    <CATEGORY id="115" name="hello" type="4"/>
+    <CATEGORY id="116" name="hello" type="5"/>
+    <CATEGORY id="117" name="hello" type="6"/>
+    
 </dataset>
