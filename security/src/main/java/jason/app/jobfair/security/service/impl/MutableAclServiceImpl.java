@@ -115,7 +115,7 @@ public class MutableAclServiceImpl implements MutableAclService {
     }
 
     @Override
-    @Transactional(propagation=Propagation.MANDATORY)
+    @Transactional
     public MutableAcl createAcl(ObjectIdentity objectIdentity) throws AlreadyExistsException {
         Assert.notNull(objectIdentity, "Object Identity required");
 
@@ -135,10 +135,9 @@ public class MutableAclServiceImpl implements MutableAclService {
         
         Acl acl = readAclById(objectIdentity);
         Assert.isInstanceOf(MutableAcl.class, acl, "MutableAcl should be been returned");
-/**        
+       
         return (MutableAcl) acl;
- */
-        return null;
+
     }
     
     /**

@@ -14,29 +14,32 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.map.util.BeanUtil;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
+@Repository("aclDao")
 public class AclDaoImpl implements IAclDao {
     
     public final static String DEFAULT_SELECT_CLAUSE = "select aoi.objIdIdentity, "
-            + "ae.aceOrder ace_order,  "
-            + "aoi.id acl_id, "
-            + "parent.id parent_object, "
-            + "aoi.entriesInheriting  entries_inheriting, "
-            + "ae.id  ace_id, "
+            + "ae.aceOrder as ace_order,  "
+            + "aoi.id as acl_id, "
+            + "parent.id as parent_object, "
+            + "aoi.entriesInheriting as entries_inheriting, "
+            + "ae.id as ace_id, "
             + "ae.mask,  "
             + "ae.granting,  "
-            + "ae.auditSuccess  audit_success, "
-            + "ae.auditFailure  audit_failure,  "
-            + "as2.principal  ace_principal, "
-            + "as2.sid  ace_sid,  "
-            + "as1.principal  acl_principal, "
-            + "as1.sid  acl_sid, "
+            + "ae.auditSuccess as audit_success, "
+            + "ae.auditFailure as audit_failure,  "
+            + "as2.principal as ace_principal, "
+            + "as2.sid as ace_sid,  "
+            + "as1.principal as acl_principal, "
+            + "as1.sid as acl_sid, "
             + "ac.clazz "
             + "from AclObjectIdentityImpl aoi "
             + "left join aoi.parentObject parent "
@@ -85,12 +88,10 @@ public class AclDaoImpl implements IAclDao {
 
             return sqlStringBldr.toString();
         }
-        
+    
+    @PersistenceContext
     private EntityManager em;
- 
-    public void setEntityManager(EntityManager e) {
-        em = e;
-    }
+
     
     @Override
     public List<AclObjectIdentityImpl> findChildren(Serializable identifier, String type) {
@@ -126,6 +127,7 @@ public class AclDaoImpl implements IAclDao {
     }
 
     @Override
+    @Transactional
     public AclSidImpl createAclSid(AclSidImpl sid) {
       
         em.persist(sid);

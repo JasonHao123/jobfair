@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+	 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+	http://www.springframework.org/schema/context
+                         http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+	<context:component-scan base-package="jason.app.jobfair.security" />
+	<!-- Database -->
+	<jdbc:embedded-database id="datasource" type="H2"></jdbc:embedded-database>
+
+	<!-- Entity Manager -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="datasource" />
+		<property name="persistenceUnitName" value="common-test" />
+        <property name="packagesToScan" value="jason.app.jobfair.common.entity" />
+	</bean>
+
+	<!-- Transaction Manager -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	
+	<!-- Jpa Repositories -->
+	<jpa:repositories base-package="jason.app.jobfair.security.repository"></jpa:repositories>
+	
+	
+	
+	  <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+    <constructor-arg>
+      <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager">
+          <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+            <property name="shared" value="true" />
+          </bean>
+        </property>
+        <property name="cacheName" value="aclCache" />
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="lookupStrategy" class="jason.app.jobfair.security.service.impl.BasicLookupStrategy">
+    <constructor-arg ref="aclDao" />
+    <constructor-arg ref="aclCache" />
+    <constructor-arg>
+      <bean class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg>
+          <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+            <constructor-arg value="ROLE_ADMINISTRATOR" />
+          </bean>
+        </constructor-arg>
+      </bean>
+    </constructor-arg>
+    <constructor-arg>
+      <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+    </constructor-arg>
+  </bean>
+
+    <sec:authentication-manager>
+        <sec:authentication-provider user-service-ref="userDetailService">
+              
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+    
+    <bean class="org.springframework.security.acls.AclPermissionEvaluator" >
+        <constructor-arg ref="aclService" />
+    </bean>
+</beans>

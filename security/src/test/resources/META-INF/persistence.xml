@@ -1,0 +1,19 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	version="1.0">
+	<persistence-unit name="common-test" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.show_sql" value="true"/>
+		</properties>
+    <class>jason.app.jobfair.security.entity.UserImpl</class>
+    <class>jason.app.jobfair.security.entity.RoleImpl</class>
+    <class>jason.app.jobfair.security.entity.AclClassImpl</class>
+    <class>jason.app.jobfair.security.entity.AclEntryImpl</class>
+    <class>jason.app.jobfair.security.entity.AclObjectIdentityImpl</class>
+    <class>jason.app.jobfair.security.entity.AclSidImpl</class>
+    <class>jason.app.jobfair.security.entity.RememberMeTokenImpl</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+	</persistence-unit>
+</persistence>
